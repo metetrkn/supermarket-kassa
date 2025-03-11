@@ -1,6 +1,6 @@
 package se.mete.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Product class representing a product in the supermarket.
