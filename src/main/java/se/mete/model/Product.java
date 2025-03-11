@@ -1,25 +1,38 @@
 package se.mete.model;
 
+import javax.persistence.*;
 
 /**
  * Product class representing a product in the supermarket.
  */
+@Entity
+@Table(name = "Products")
 public class Product {
     // Fields corresponding to the columns in the Products table
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ProductID")
     private int productID;
+
+    @Column(name = "ProductName")
     private String productName;
+
+    @Column(name = "Price")
     private double price;
+
+    @Column(name = "Category")
     private String category;
 
-
     // Constructor
+    public Product() {
+    }
+
     public Product(int productID, String productName, double price, String category) {
         this.productID = productID;
         this.productName = productName;
         this.price = price;
         this.category = category;
     }
-
 
     // Getters and setters
     public int getProductID() {
@@ -54,7 +67,6 @@ public class Product {
         this.category = category;
     }
 
-    
     // toString method for easy printing
     @Override
     public String toString() {
