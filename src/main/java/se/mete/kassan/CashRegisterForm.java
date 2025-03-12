@@ -1,9 +1,10 @@
-package se.systementor;
+package se.mete.kassan;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import se.mete.repository.Database;
 
 public class CashRegisterForm {
     private JPanel panel1;
@@ -18,7 +19,7 @@ public class CashRegisterForm {
     private Database database = new Database();
 
     public CashRegisterForm() {
-        for (String name : database.activeProducts()) {
+        for (String name : database.allProducts()) {
             JButton button = new JButton(name);
             buttonsPanel.add(button);
         }
