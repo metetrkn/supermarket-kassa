@@ -4,8 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import org.springframework.stereotype.Component;
 import se.mete.repository.Database;
 
+@Component
 public class CashRegisterForm {
     private JPanel panel1;
     private JPanel panelRight;
