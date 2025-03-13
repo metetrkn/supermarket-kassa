@@ -18,6 +18,7 @@ public class CashRegisterForm {
     private JPanel panelRight;
     private JPanel panelLeft;
     private JTextArea receiptArea;
+    private JTextArea productInfoArea;
     private JPanel buttonsPanel;
     private JTextField textField1;
     private JTextField textField2;
@@ -32,18 +33,29 @@ public class CashRegisterForm {
 
     @PostConstruct
     public void init() {
-        // Left-aligned, 5px horizontal and vertical gaps
-        panelLeft.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        // Left panel with vertical layout
+        panelLeft.setLayout(new BorderLayout(5, 5));
+        
+        // Create product info display area
+        productInfoArea = new JTextArea(1, 20);
+        productInfoArea.setEditable(false);
+        productInfoArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        JScrollPane infoScroll = new JScrollPane(productInfoArea);
+        infoScroll.setPreferredSize(new Dimension(300, 30));
 
         // Fetch products from the database
         List<String> products = database.allProducts();
 
-        // Add each product as a button to panelLeft
+        // Create panel for product buttons
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        
+        // Add each product as a button to buttonPanel
         for (String productName : products) {
             JButton productButton = new JButton(productName);
-            panelLeft.add(productButton);
+            buttonPanel.add(productButton);
 
-            // Add action listener to handle button clicks (optional)
+            // Add action listener to handle button clicks
             productButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -52,34 +64,79 @@ public class CashRegisterForm {
                     String category = productDetails[0];
                     String price = productDetails[1];
                     
-                    // Update current line with product info
-                    String currentText = receiptArea.getText();
-                    if (currentText.isEmpty() || currentText.endsWith("\n")) {
-                        receiptArea.setText(productName + " - " + category + " - " + price + "\n");
-                    } else {
-                        // Remove last line and replace with new product info
-                        String[] lines = currentText.split("\n");
-                        String newText = String.join("\n", Arrays.copyOf(lines, lines.length - 1)) + "\n";
-                        receiptArea.setText(newText + productName + " - " + category + " - " + price + "\n");
-                    }
+                    // Update product info display only in left panel
+                    productInfoArea.setText(productName + " - " + category + " - " + price);
                 }
             });
+            
+            // Add button panel and info area to left panel
+            panelLeft.add(buttonPanel, BorderLayout.CENTER);
+            panelLeft.add(new JScrollPane(productInfoArea), BorderLayout.SOUTH);
         }
 
+        // Add quantity input field with proper layout
+        JPanel quantityPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JTextField quantityField = new JTextField("1", 5);
+        quantityPanel.add(new JLabel("Antal:"));
+        quantityPanel.add(quantityField);
+        panelRight.add(quantityPanel, BorderLayout.NORTH);
+        
+        // Make receipt area scrollable
+        JScrollPane scrollPane = new JScrollPane(receiptArea);
+        panelRight.add(scrollPane, BorderLayout.CENTER);
+        
         // Add action listener for the "Add" button
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                receiptArea.append("                     STEFANS SUPERSHOP\n");
-                receiptArea.append("----------------------------------------------------\n");
-                receiptArea.append("\n");
-                receiptArea.append("Kvittonummer: 122        Datum: 2024-09-01 13:00:21\n");
-                receiptArea.append("----------------------------------------------------\n");
-                receiptArea.append("Kaffe Gevalia           5 *     51.00    =   255.00  \n");
-                receiptArea.append("Nallebjörn              1 *     110.00   =   110.00  \n");
-                receiptArea.append("Total                                        ------\n");
-                receiptArea.append("                                             306.00\n");
-                receiptArea.append("TACK FÖR DITT KÖP\n");
+                try {
+                    // Get current product details
+                    String currentText = receiptArea.getText();
+                    String[] lines = currentText.split("\n");
+                    String lastLine = lines[lines.length - 1];
+                    String[] productInfo = lastLine.split(" - ");
+                    
+                    // Get and validate quantity
+                    String quantityText = quantityField.getText().trim();
+                    int quantity;
+                    try {
+                        quantity = Integer.parseInt(quantityText);
+                        if (quantity < 1) {
+                            quantity = 1;
+                            quantityField.setText("1");
+                            throw new NumberFormatException("Quantity must be at least 1");
+                        }
+                    } catch (NumberFormatException ex) {
+                        quantityField.setText("1");
+                        throw new NumberFormatException("Invalid quantity: '" + quantityText + "'. Please enter a positive number.");
+                    }
+                    
+                    // Calculate total price
+                    double price = Double.parseDouble(productInfo[2]);
+                    double total = price * quantity;
+                    
+                    // Format receipt line
+                    String receiptLine = String.format("%-20s %2d * %8.2f = %8.2f\n",
+                        productInfo[0], quantity, price, total);
+                        
+                    // Add to receipt
+                    if (currentText.isEmpty()) {
+                        // First product - create receipt header
+                        receiptArea.setText("                     STEFANS SUPERSHOP\n");
+                        receiptArea.append("----------------------------------------------------\n");
+                        receiptArea.append("\n");
+                        receiptArea.append("Kvittonummer: 122        Datum: 2024-09-01 13:00:21\n");
+                        receiptArea.append("----------------------------------------------------\n");
+                    }
+                    receiptArea.append(receiptLine);
+                    
+                    // Clear current product line
+                    receiptArea.append("\n");
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(panel1,
+                        "Please enter a valid quantity",
+                        "Input Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }
