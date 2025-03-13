@@ -8,7 +8,7 @@ import java.util.List;
  * JpaRepository built-in for CRUD operations
  */
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findByName(String name);
+    List<Product> findByProductName(String productName);
 }
 
 

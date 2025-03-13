@@ -3,11 +3,13 @@ package se.mete.repository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
 
 /**
  * Database class for handling database operations, repository for the Products table.
  */
+@Repository
 public class Database {
     // Database connection credeantials, URL,username and password
     String url = "jdbc:mysql://localhost:3306/A101-db";
