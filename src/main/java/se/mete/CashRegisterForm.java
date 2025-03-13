@@ -31,8 +31,8 @@ public class CashRegisterForm {
 
     @PostConstruct
     public void init() {
-        // Set layout for panelLeft (e.g., GridLayout with a single column)
-        panelLeft.setLayout(new GridLayout(0, 1)); // 0 means unlimited rows, 1 column
+        // Left-aligned, 5px horizontal and vertical gaps
+        panelLeft.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
         // Fetch products from the database
         List<String> products = database.allProducts();
