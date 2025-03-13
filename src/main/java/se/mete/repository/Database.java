@@ -62,4 +62,35 @@ public class Database {
         // Return the list of product names
         return products;
     }
+
+    /**
+     * Retrieves product details (category and price) for a given product name
+     *
+     * @param productName The name of the product to look up
+     * @return String array containing [category, price]
+     */
+    public String[] getProductDetails(String productName) {
+        String[] details = new String[2];
+        
+        try {
+            Connection conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement(
+                "SELECT Category, Price FROM Products WHERE ProductName = ?");
+            stmt.setString(1, productName);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                details[0] = rs.getString("Category");
+                details[1] = String.format("%.2f", rs.getDouble("Price"));
+            }
+            
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return details;
+    }
 }
