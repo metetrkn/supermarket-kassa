@@ -77,6 +77,7 @@ public class CashRegisterForm {
         // Add quantity input field and Add button
         JPanel quantityPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JTextField quantityField = new JTextField("1", 5);
+        quantityField.setHorizontalAlignment(JTextField.CENTER);
         JButton addToInvoiceButton = new JButton("Add");
         
         quantityPanel.add(new JLabel("Amount:"));
@@ -86,6 +87,8 @@ public class CashRegisterForm {
         
         // Add action listener for Add to Invoice button
         addToInvoiceButton.addActionListener(new ActionListener() {
+
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -94,22 +97,41 @@ public class CashRegisterForm {
                     String[] productDetails = database.getProductDetails(productName);
                     
                     // Get and validate quantity
-                    int quantity = Integer.parseInt(quantityField.getText().trim());
-                    if (quantity < 1) {
-                        throw new NumberFormatException("Quantity must be at least 1");
+                    String quantityText = quantityField.getText().trim();
+                    
+                    if (quantityText.isEmpty()) {
+                        throw new NumberFormatException("Quantity cannot be empty. Please enter a number.");
                     }
                     
-                    // Get product price
-                    double price = Double.parseDouble(productDetails[1]);
+                    int quantity;
+                    try {
+                        quantity = Integer.parseInt(quantityText);
+                        if (quantity < 1) {
+                            throw new NumberFormatException("Quantity must be at least 1");
+                        }
+                    } catch (NumberFormatException ex) {
+                        throw new NumberFormatException("Invalid quantity: '" + quantityText + "'. Please enter a whole number (e.g. 1, 2, 3).");
+                    }
                     
-                    // Create invoice line
-                    String invoiceLine = String.format("%-20s %2d x %8.2f = %8.2f\n",
+                    // Get and validate product price
+                    double price;
+                    try {
+                        price = Double.parseDouble(productDetails[1].trim().replace(',', '.'));
+                        if (price <= 0) {
+                            throw new NumberFormatException("Price must be greater than 0");
+                        }
+                    } catch (NumberFormatException ex) {
+                        throw new NumberFormatException("Invalid price format: '" + productDetails[1] + "'. Please enter a valid price (e.g. 12.50).");
+                    }
+
+                    // Create invoice line according to specification
+                    String invoiceLine = String.format("%-20s %2d * %8.2f = %8.2f  \n",
                         productName, quantity, price, price * quantity);
                         
                     // Add to receipt
                     if (receiptArea.getText().isEmpty()) {
                         // First product - create receipt header
-                        receiptArea.setText("                     STEFANS SUPERSHOP\n");
+                        receiptArea.setText("                     A101 SUPERSHOP\n");
                         receiptArea.append("----------------------------------------------------\n");
                         receiptArea.append("\n");
                         receiptArea.append("Kvittonummer: 122        Datum: 2024-09-01 13:00:21\n");
@@ -119,9 +141,9 @@ public class CashRegisterForm {
                     receiptArea.append("\n");
                     
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(panel1,
-                        "Please enter a valid quantity",
-                        "Input Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(panel1,
+                    ex.getMessage(),
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -144,24 +166,26 @@ public class CashRegisterForm {
                     // Get and validate quantity
                     String quantityText = quantityField.getText().trim();
                     int quantity;
+                    
+                    if (quantityText.isEmpty()) {
+                        throw new NumberFormatException("Quantity cannot be empty. Please enter a number.");
+                    }
+                    
                     try {
                         quantity = Integer.parseInt(quantityText);
                         if (quantity < 1) {
-                            quantity = 1;
-                            quantityField.setText("1");
                             throw new NumberFormatException("Quantity must be at least 1");
                         }
                     } catch (NumberFormatException ex) {
-                        quantityField.setText("1");
-                        throw new NumberFormatException("Invalid quantity: '" + quantityText + "'. Please enter a positive number.");
+                        throw new NumberFormatException("Invalid quantity: '" + quantityText + "'. Please enter a whole number (e.g. 1, 2, 3).");
                     }
                     
                     // Calculate total price
                     double price = Double.parseDouble(productInfo[2]);
                     double total = price * quantity;
                     
-                    // Format receipt line
-                    String receiptLine = String.format("%-20s %2d * %8.2f = %8.2f\n",
+                    // Format receipt line according to specification
+                    String receiptLine = String.format("%-20s %2d * %8.2f = %8.2f  \n",
                         productInfo[0], quantity, price, total);
                         
                     // Add to receipt
