@@ -74,12 +74,57 @@ public class CashRegisterForm {
             panelLeft.add(new JScrollPane(productInfoArea), BorderLayout.SOUTH);
         }
 
-        // Add quantity input field with proper layout
+        // Add quantity input field and Add button
         JPanel quantityPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JTextField quantityField = new JTextField("1", 5);
-        quantityPanel.add(new JLabel("Antal:"));
+        JButton addToInvoiceButton = new JButton("Add");
+        
+        quantityPanel.add(new JLabel("Amount:"));
         quantityPanel.add(quantityField);
+        quantityPanel.add(addToInvoiceButton);
         panelRight.add(quantityPanel, BorderLayout.NORTH);
+        
+        // Add action listener for Add to Invoice button
+        addToInvoiceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // Get selected product info
+                    String productName = productInfoArea.getText().split(" - ")[0];
+                    String[] productDetails = database.getProductDetails(productName);
+                    
+                    // Get and validate quantity
+                    int quantity = Integer.parseInt(quantityField.getText().trim());
+                    if (quantity < 1) {
+                        throw new NumberFormatException("Quantity must be at least 1");
+                    }
+                    
+                    // Get product price
+                    double price = Double.parseDouble(productDetails[1]);
+                    
+                    // Create invoice line
+                    String invoiceLine = String.format("%-20s %2d x %8.2f = %8.2f\n",
+                        productName, quantity, price, price * quantity);
+                        
+                    // Add to receipt
+                    if (receiptArea.getText().isEmpty()) {
+                        // First product - create receipt header
+                        receiptArea.setText("                     STEFANS SUPERSHOP\n");
+                        receiptArea.append("----------------------------------------------------\n");
+                        receiptArea.append("\n");
+                        receiptArea.append("Kvittonummer: 122        Datum: 2024-09-01 13:00:21\n");
+                        receiptArea.append("----------------------------------------------------\n");
+                    }
+                    receiptArea.append(invoiceLine);
+                    receiptArea.append("\n");
+                    
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(panel1,
+                        "Please enter a valid quantity",
+                        "Input Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
         
         // Make receipt area scrollable
         JScrollPane scrollPane = new JScrollPane(receiptArea);
