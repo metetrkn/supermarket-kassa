@@ -157,6 +157,27 @@ public class CashRegisterForm {
     }
 
     private void createUIComponents() {
-        // TODO: place custom component creation code here
+        // Initialize panels
+        panel1 = new JPanel(new BorderLayout());
+        panelLeft = new JPanel(new BorderLayout());
+        panelRight = new JPanel(new BorderLayout());
+        buttonsPanel = new JPanel(new FlowLayout());
+        
+        // Add panels to main panel
+        panel1.add(panelLeft, BorderLayout.WEST);
+        panel1.add(panelRight, BorderLayout.CENTER);
+        panel1.add(buttonsPanel, BorderLayout.SOUTH);
+        
+        // Initialize text areas
+        receiptArea = new JTextArea();
+        productInfoArea = new JTextArea();
+        
+        // Initialize buttons
+        addButton = new JButton("Add");
+        payButton = new JButton("Pay");
+        
+        // Add buttons to button panel
+        buttonsPanel.add(addButton);
+        buttonsPanel.add(payButton);
     }
 }
