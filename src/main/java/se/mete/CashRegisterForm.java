@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.mete.repository.Database;
 import java.util.List;
+import java.util.Arrays;
 
 @Component
 public class CashRegisterForm {
@@ -46,8 +47,21 @@ public class CashRegisterForm {
             productButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // Handle button click (e.g., add product to receipt)
-                    receiptArea.append(productName + "\n"); // Example: Add product name to receipt
+                    // Get product details from database
+                    String[] productDetails = database.getProductDetails(productName);
+                    String category = productDetails[0];
+                    String price = productDetails[1];
+                    
+                    // Update current line with product info
+                    String currentText = receiptArea.getText();
+                    if (currentText.isEmpty() || currentText.endsWith("\n")) {
+                        receiptArea.setText(productName + " - " + category + " - " + price + "\n");
+                    } else {
+                        // Remove last line and replace with new product info
+                        String[] lines = currentText.split("\n");
+                        String newText = String.join("\n", Arrays.copyOf(lines, lines.length - 1)) + "\n";
+                        receiptArea.setText(newText + productName + " - " + category + " - " + price + "\n");
+                    }
                 }
             });
         }
