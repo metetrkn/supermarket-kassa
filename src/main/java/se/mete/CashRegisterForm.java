@@ -72,7 +72,7 @@ public class CashRegisterForm {
                     String price = productDetails[1];
 
                     // Update product info display only in left panel
-                    productInfoArea.setText(productName + " - " + category + " - " + price);
+                    productInfoArea.setText(productName + " - " + price);
                 }
             });
         }
