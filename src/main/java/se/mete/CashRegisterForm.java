@@ -22,7 +22,6 @@ public class CashRegisterForm {
     private JTextField quantityField;
     private JButton addButton;
     private JButton payButton;
-    private JButton dailyStatsButton;
     private final Database database;
 
     // Constructor injection without @Autowired
@@ -103,14 +102,9 @@ public class CashRegisterForm {
         payButton = new JButton("Pay");
         payButton.addActionListener(e -> payAndClear());
 
-        // Add Daily Stats button
-        dailyStatsButton = new JButton("Daily Stats");
-        dailyStatsButton.addActionListener(e -> showDailyStats());
-
         // Add buttons to bottom panel
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPanel.add(payButton);
-        bottomPanel.add(dailyStatsButton);
 
         // Make receipt area scrollable
         receiptArea = new JTextArea();
@@ -227,20 +221,6 @@ public class CashRegisterForm {
         timer.start(); // Start the timer
     }
 
-    private void showDailyStats() {
-        String dateStr = JOptionPane.showInputDialog(panel1, "Enter date (YYYY-MM-DD) for stats:", "2025-03-01");
-        if (dateStr == null || dateStr.isBlank()) {
-            return;
-        }
-
-        // Fetch daily stats from the database (dummy implementation)
-        String stats = "Daily stats for " + dateStr + "\n" +
-                "Total Sales: 1000 SEK\n" +
-                "Total VAT: 200 SEK\n" +
-                "Number of Receipts: 10";
-
-        JOptionPane.showMessageDialog(panel1, stats, "Daily Stats", JOptionPane.INFORMATION_MESSAGE);
-    }
 
     public void run() {
         // Ensure the GUI runs on the Event Dispatch Thread (EDT)
@@ -276,11 +256,9 @@ public class CashRegisterForm {
         // Initialize buttons
         addButton = new JButton("Add");
         payButton = new JButton("Pay");
-        dailyStatsButton = new JButton("Daily Stats");
 
         // Add buttons to button panel
         buttonsPanel.add(addButton);
         buttonsPanel.add(payButton);
-        buttonsPanel.add(dailyStatsButton);
     }
 }
