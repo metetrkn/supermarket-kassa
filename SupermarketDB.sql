@@ -18,10 +18,22 @@ CREATE TABLE IF NOT EXISTS `Products` (
 );
 
 # ---------------------------------------------------------------------- #
+# Create table "Bills",                                          #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE IF NOT EXISTS `Bills` (
+    `ReceiptNumber` INT NOT NULL,
+    `Date` DATETIME NOT NULL,
+    `Products` VARCHAR(1000) NOT NULL,
+    `TotalPrice` DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (`ReceiptNumber`)
+);
+
+# ---------------------------------------------------------------------- #
 # Insert sample data into "Products"                                    #
 # ---------------------------------------------------------------------- #
 
-# Deleting data in the table  
+# Deleting data in the table
 TRUNCATE TABLE Products;
 
 INSERT INTO Products (ProductName, Price, Category) VALUES
