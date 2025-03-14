@@ -135,7 +135,7 @@ public class CashRegisterForm {
             }
 
             double totalPrice = price * quantity;
-            String receiptLine = String.format("║ %-20s %2d x %8.2f = %8.2f SEK ║\n",
+            String receiptLine = String.format("║ %-20s %2d x %8.2f = %8.2f SEK ╗\n",
                     productName, quantity, price, totalPrice);
 
             if (receiptArea.getText().isEmpty()) {
@@ -146,12 +146,12 @@ public class CashRegisterForm {
                 receiptArea.append("║ ██╔══██║██╔══██║██║███╗██║██╔══██║██╔══██╗ ║\n");
                 receiptArea.append("║ ██║  ██║██║  ██║╚███╔███╔╝██║  ██║██║  ██║ ║\n");
                 receiptArea.append("║ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝ ║\n");
-                receiptArea.append("╠════════════════════════════════════════════╣\n");
+                receiptArea.append("╠════════════════════════════════════════════╗\n");
                 receiptArea.append("║          A101 Supermarket Receipt          ║\n");
-                receiptArea.append("╠════════════════════════════════════════════╣\n");
+                receiptArea.append("╠════════════════════════════════════════════╗\n");
                 receiptArea.append("║ Kvittonummer: 122                          ║\n");
                 receiptArea.append("║ Datum: 2024-09-01 13:00:21                 ║\n");
-                receiptArea.append("╠════════════════════════════════════════════╣\n");
+                receiptArea.append("╠════════════════════════════════════════════╗\n");
             }
             receiptArea.append(receiptLine);
         } catch (NumberFormatException e) {
