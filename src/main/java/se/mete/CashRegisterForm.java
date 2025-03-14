@@ -4,13 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.mete.repository.Database;
 import java.util.List;
-import java.util.Arrays;
 
 @Component
 public class CashRegisterForm {
@@ -26,7 +24,7 @@ public class CashRegisterForm {
     private JButton payButton;
     private final Database database;
 
-    @Autowired
+    // Constructor injection without @Autowired
     public CashRegisterForm(Database database) {
         this.database = database;
     }
