@@ -142,28 +142,37 @@ public class CashRegisterForm {
             }
 
             double totalPrice = price * quantity;
-            String receiptLine = String.format("║ %-20s %2d x %8.2f = %8.2f SEK ╗\n",
-                    productName, quantity, price, totalPrice);
 
+            // Check if receipt is empty and initialize if needed
             if (receiptArea.getText().isEmpty()) {
-                receiptArea.setText("╔════════════════════════════════════════════╗\n");
-                receiptArea.append("║  █████╗ ██╗  ██╗ ██╗  ██╗ █████╗ ██████╗  ║\n");
-                receiptArea.append("║ ██╔══██╗██║  ██║██╔╝  ██║██╔══██╗██╔══██╗ ║\n");
-                receiptArea.append("║ ███████║███████║██║ █╗ ██║███████║██████╔╝ ║\n");
-                receiptArea.append("║ ██╔══██║██╔══██║██║███╗██║██╔══██║██╔══██╗ ║\n");
-                receiptArea.append("║ ██║  ██║██║  ██║╚███╔███╔╝██║  ██║██║  ██║ ║\n");
-                receiptArea.append("║ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝ ║\n");
-                receiptArea.append("╠════════════════════════════════════════════╗\n");
-                receiptArea.append("║          A101 Supermarket Receipt          ║\n");
-                receiptArea.append("╠════════════════════════════════════════════╗\n");
-                receiptArea.append("║ Kvittonummer: 122                          ║\n");
-                receiptArea.append("║ Datum: 2024-09-01 13:00:21                 ║\n");
-                receiptArea.append("╠════════════════════════════════════════════╗\n");
+                initializeReceiptHeader();
             }
+
+            // Create a more structured receipt line
+            String receiptLine = String.format("║ %-20s %3d × %7.2f = %8.2f SEK ║\n",
+                    productName, quantity, price, totalPrice);
             receiptArea.append(receiptLine);
+
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(panel1, "Invalid quantity: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    // New method to initialize receipt header
+    private void initializeReceiptHeader() {
+        receiptArea.setText("╔════════════════════════════════════════════╗\n");
+        receiptArea.append("║  █████╗ ██╗  ██╗ ██╗  ██╗ █████╗ ██████╗  \n");
+        receiptArea.append("║ ██╔══██╗██║  ██║██╔╝  ██║██╔══██╗██╔══██╗ \n");
+        receiptArea.append("║ ███████║███████║██║ █╗ ██║███████║██████╔╝ \n");
+        receiptArea.append("║ ██╔══██║██╔══██║██║███╗██║██╔══██║██╔══██╗ \n");
+        receiptArea.append("║ ██║  ██║██║  ██║╚███╔███╔╝██║  ██║██║  ██║ \n");
+        receiptArea.append("║ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝ \n");
+        receiptArea.append("╠════════════════════════════════════════════╣\n");
+        receiptArea.append("║          A101 Supermarket Receipt          \n");
+        receiptArea.append("╠════════════════════════════════════════════╣\n");
+        receiptArea.append("║ Kvittonummer: 122                          \n");
+        receiptArea.append("║ Datum: 2024-09-01 13:00:21                 \n");
+        receiptArea.append("╠════════════════════════════════════════════╣\n");
     }
 
     private void payAndClear() {
@@ -195,16 +204,16 @@ public class CashRegisterForm {
 
         // Display the total and footer
         receiptArea.append("╠════════════════════════════════════════════╣\n");
-        receiptArea.append(String.format("║ TOTAL: %38.2f SEK ║\n", totalInclVat));
+        receiptArea.append(String.format("║ TOTAL: %38.2f SEK \n", totalInclVat));
         receiptArea.append("╠════════════════════════════════════════════╣\n");
-        receiptArea.append("║             TACK FÖR DITT KÖP!            ║\n");
-        receiptArea.append("║                                            ║\n");
-        receiptArea.append("║  Besök oss på: www.a101supermarket.se      ║\n");
-        receiptArea.append("║  Kundservice: 08-123 456 78                ║\n");
-        receiptArea.append("║  Öppettider: 08:00 - 22:00                 ║\n");
-        receiptArea.append("║                                            ║\n");
-        receiptArea.append("║  Följ oss:                                 ║\n");
-        receiptArea.append("║  [FB] [TW] [IG]                            ║\n");
+        receiptArea.append("║             TACK FÖR DITT KÖP!            \n");
+        receiptArea.append("║                                            \n");
+        receiptArea.append("║  Besök oss på: www.a101supermarket.se      \n");
+        receiptArea.append("║  Kundservice: 08-123 456 78                \n");
+        receiptArea.append("║  Öppettider: 08:00 - 22:00                 \n");
+        receiptArea.append("║                                            \n");
+        receiptArea.append("║  Följ oss:                                 \n");
+        receiptArea.append("║  [FB] [TW] [IG]                            \n");
         receiptArea.append("╚════════════════════════════════════════════╝\n\n");
 
         // Use a Timer to clear the receipt area after 3 seconds
