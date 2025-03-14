@@ -135,15 +135,23 @@ public class CashRegisterForm {
             }
 
             double totalPrice = price * quantity;
-            String receiptLine = String.format("%-20s %2d * %8.2f = %8.2f SEK\n",
+            String receiptLine = String.format("║ %-20s %2d x %8.2f = %8.2f SEK ║\n",
                     productName, quantity, price, totalPrice);
 
             if (receiptArea.getText().isEmpty()) {
-                receiptArea.setText("                     A101 SUPERSHOP\n");
-                receiptArea.append("----------------------------------------------------\n");
-                receiptArea.append("\n");
-                receiptArea.append("Kvittonummer: 122        Datum: 2024-09-01 13:00:21\n");
-                receiptArea.append("----------------------------------------------------\n");
+                receiptArea.setText("╔════════════════════════════════════════════╗\n");
+                receiptArea.append("║  █████╗ ██╗  ██╗ ██╗  ██╗ █████╗ ██████╗  ║\n");
+                receiptArea.append("║ ██╔══██╗██║  ██║██╔╝  ██║██╔══██╗██╔══██╗ ║\n");
+                receiptArea.append("║ ███████║███████║██║ █╗ ██║███████║██████╔╝ ║\n");
+                receiptArea.append("║ ██╔══██║██╔══██║██║███╗██║██╔══██║██╔══██╗ ║\n");
+                receiptArea.append("║ ██║  ██║██║  ██║╚███╔███╔╝██║  ██║██║  ██║ ║\n");
+                receiptArea.append("║ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝ ║\n");
+                receiptArea.append("╠════════════════════════════════════════════╣\n");
+                receiptArea.append("║          A101 Supermarket Receipt          ║\n");
+                receiptArea.append("╠════════════════════════════════════════════╣\n");
+                receiptArea.append("║ Kvittonummer: 122                          ║\n");
+                receiptArea.append("║ Datum: 2024-09-01 13:00:21                 ║\n");
+                receiptArea.append("╠════════════════════════════════════════════╣\n");
             }
             receiptArea.append(receiptLine);
         } catch (NumberFormatException e) {
@@ -178,11 +186,21 @@ public class CashRegisterForm {
             }
         }
 
-        // Display the total and "Thanks for shopping" message
-        receiptArea.append(String.format("TOTAL: %.2f SEK\n", totalInclVat));
-        receiptArea.append("TACK FÖR DITT KÖP!\n\n");
+        // Display the total and footer
+        receiptArea.append("╠════════════════════════════════════════════╣\n");
+        receiptArea.append(String.format("║ TOTAL: %38.2f SEK ║\n", totalInclVat));
+        receiptArea.append("╠════════════════════════════════════════════╣\n");
+        receiptArea.append("║             TACK FÖR DITT KÖP!            ║\n");
+        receiptArea.append("║                                            ║\n");
+        receiptArea.append("║  Besök oss på: www.a101supermarket.se      ║\n");
+        receiptArea.append("║  Kundservice: 08-123 456 78                ║\n");
+        receiptArea.append("║  Öppettider: 08:00 - 22:00                 ║\n");
+        receiptArea.append("║                                            ║\n");
+        receiptArea.append("║  Följ oss:                                 ║\n");
+        receiptArea.append("║  [FB] [TW] [IG]                            ║\n");
+        receiptArea.append("╚════════════════════════════════════════════╝\n\n");
 
-        // Use a Timer to clear the receipt area after 1.5 seconds
+        // Use a Timer to clear the receipt area after 3 seconds
         Timer timer = new Timer(1500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
