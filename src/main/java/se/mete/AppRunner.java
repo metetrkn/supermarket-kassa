@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 public class AppRunner implements CommandLineRunner {
     private final CashRegisterForm cashRegisterForm;
 
-    @Autowired // Ensure this annotation is present
     public AppRunner(CashRegisterForm cashRegisterForm) {
         this.cashRegisterForm = cashRegisterForm;
     }
