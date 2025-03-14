@@ -77,19 +77,27 @@ public class CashRegisterForm {
             });
         }
 
-        // Add button panel and info area to left panel
-        panelLeft.add(buttonPanel, BorderLayout.CENTER);
-        panelLeft.add(infoScroll, BorderLayout.SOUTH);
+        // Create a panel for product info and quantity
+        JPanel productInfoAndQuantityPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        // Add quantity input field and Add button
-        JPanel quantityPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        // Add product info display area
+        productInfoAndQuantityPanel.add(new JLabel("Product:"));
+        productInfoAndQuantityPanel.add(infoScroll);
+
+        // Add quantity input field
+        productInfoAndQuantityPanel.add(new JLabel("Quantity:"));
         quantityField = new JTextField("1", 5);
         quantityField.setHorizontalAlignment(JTextField.CENTER);
+        productInfoAndQuantityPanel.add(quantityField);
+
+        // Add Add button
         addButton = new JButton("Add");
         addButton.addActionListener(e -> addToReceipt());
-        quantityPanel.add(new JLabel("Quantity:"));
-        quantityPanel.add(quantityField);
-        quantityPanel.add(addButton);
+        productInfoAndQuantityPanel.add(addButton);
+
+        // Add button panel and info area to left panel
+        panelLeft.add(buttonPanel, BorderLayout.CENTER);
+        panelLeft.add(productInfoAndQuantityPanel, BorderLayout.SOUTH);
 
         // Add Pay button
         payButton = new JButton("Pay");
@@ -101,7 +109,6 @@ public class CashRegisterForm {
 
         // Add buttons to bottom panel
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        bottomPanel.add(addButton);
         bottomPanel.add(payButton);
         bottomPanel.add(dailyStatsButton);
 
