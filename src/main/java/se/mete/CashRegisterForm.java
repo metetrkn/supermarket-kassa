@@ -9,37 +9,47 @@ import org.springframework.stereotype.Component;
 import se.mete.repository.Database;
 import java.util.List;
 
-@Component
+/**
+ * CashRegisterForm class representing the GUI for the cash register system.
+ * Handles product selection, receipt generation, and payment processing.
+ */
+@Component // Marks this class as a Spring component for dependency injection
 public class CashRegisterForm {
-    private JPanel panel1;
-    private JPanel panelRight;
-    private JPanel panelLeft;
-    private JTextArea receiptArea;
-    private JTextArea productInfoArea;
-    private JPanel buttonsPanel;
-    private JTextField textField1; // Add this field
-    private JTextField textField2; // Add this field
-    private JTextField quantityField;
-    private JButton addButton;
-    private JButton payButton;
-    private final Database database;
+    private JPanel panel1; // Main panel for the GUI
+    private JPanel panelRight; // Right panel (currently unused)
+    private JPanel panelLeft; // Left panel for product selection and info
+    private JTextArea receiptArea; // Text area for displaying the receipt
+    private JTextArea productInfoArea; // Text area for displaying product info
+    private JPanel buttonsPanel; // Panel for buttons
+    private JTextField textField1; // Placeholder text field (currently unused)
+    private JTextField textField2; // Placeholder text field (currently unused)
+    private JTextField quantityField; // Text field for entering product quantity
+    private JButton addButton; // Button to add a product to the receipt
+    private JButton payButton; // Button to process payment
+    private final Database database; // Database instance for fetching product data
 
-    // Constructor injection without @Autowired
+    /**
+     * Constructor for dependency injection.
+     *
+     * @param database The Database instance to be used
+     */
     public CashRegisterForm(Database database) {
         this.database = database;
     }
 
+    /**
+     * Initializes the GUI components and layout.
+     */
     @PostConstruct
     public void init() {
-        // Initialize textField1 (if needed)
+        // Initialize text fields (if needed)
         textField1 = new JTextField();
-        textField1.setColumns(10); // Set the number of columns
+        textField1.setColumns(10);
 
-        // Initialize textField2 (if needed)
         textField2 = new JTextField();
-        textField2.setColumns(10); // Set the number of columns
+        textField2.setColumns(10);
 
-        // Left panel with vertical layout
+        // Set layout for the left panel
         panelLeft.setLayout(new BorderLayout(5, 5));
 
         // Create product info display area
@@ -70,7 +80,7 @@ public class CashRegisterForm {
                     String category = productDetails[0];
                     String price = productDetails[1];
 
-                    // Update product info display only in left panel
+                    // Update product info display
                     productInfoArea.setText(productName + " - " + price);
                 }
             });
@@ -118,6 +128,9 @@ public class CashRegisterForm {
         panel1.add(bottomPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Adds the selected product and quantity to the receipt.
+     */
     private void addToReceipt() {
         String productInfo = productInfoArea.getText();
         if (productInfo.isEmpty()) {
@@ -142,7 +155,7 @@ public class CashRegisterForm {
                 initializeReceiptHeader();
             }
 
-            // Create a more structured receipt line
+            // Create a structured receipt line
             String receiptLine = String.format("║ %-20s %3d × %7.2f = %8.2f SEK ║\n",
                     productName, quantity, price, totalPrice);
             receiptArea.append(receiptLine);
@@ -152,7 +165,9 @@ public class CashRegisterForm {
         }
     }
 
-    // New method to initialize receipt header
+    /**
+     * Initializes the receipt header with store information and formatting.
+     */
     private void initializeReceiptHeader() {
         receiptArea.setText("╔════════════════════════════════════════════╗\n");
         receiptArea.append("║  █████╗ ██╗  ██╗ ██╗  ██╗ █████╗ ██████╗  \n");
@@ -169,6 +184,9 @@ public class CashRegisterForm {
         receiptArea.append("╠════════════════════════════════════════════╣\n");
     }
 
+    /**
+     * Processes payment, calculates the total, and clears the receipt.
+     */
     private void payAndClear() {
         if (receiptArea.getText().isEmpty()) {
             JOptionPane.showMessageDialog(panel1, "No items in the receipt!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -180,16 +198,13 @@ public class CashRegisterForm {
         String[] lines = receiptArea.getText().split("\n");
         for (String line : lines) {
             if (line.contains("=")) { // Check if the line contains a product total
-                // Extract the part after the "=" sign
                 String[] parts = line.split("=");
                 if (parts.length > 1) {
-                    // Remove non-numeric characters (e.g., "SEK", whitespace) and replace comma with dot for decimal
                     String amountStr = parts[1].replaceAll("[^\\d,]", "").replace(",", ".").trim();
                     try {
                         double lineTotal = Double.parseDouble(amountStr);
                         totalInclVat += lineTotal;
                     } catch (NumberFormatException e) {
-                        // Ignore lines that cannot be parsed (e.g., header lines)
                         System.err.println("Failed to parse line: " + line);
                     }
                 }
@@ -210,20 +225,16 @@ public class CashRegisterForm {
         receiptArea.append("║  [FB] [TW] [IG]                            \n");
         receiptArea.append("╚════════════════════════════════════════════╝\n\n");
 
-        // Use a Timer to clear the receipt area after 3 seconds
-        Timer timer = new Timer(1500, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                receiptArea.setText(""); // Clear the receipt area
-            }
-        });
+        // Use a Timer to clear the receipt area after 1.5 seconds
+        Timer timer = new Timer(1500, e -> receiptArea.setText(""));
         timer.setRepeats(false); // Ensure the timer only runs once
         timer.start(); // Start the timer
     }
 
-
+    /**
+     * Runs the GUI on the Event Dispatch Thread (EDT).
+     */
     public void run() {
-        // Ensure the GUI runs on the Event Dispatch Thread (EDT)
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Cash Register");
             frame.setContentPane(this.panel1);
@@ -237,6 +248,9 @@ public class CashRegisterForm {
         });
     }
 
+    /**
+     * Creates and initializes UI components.
+     */
     private void createUIComponents() {
         // Initialize panels
         panel1 = new JPanel(new BorderLayout());
