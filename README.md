@@ -48,4 +48,6 @@ We welcome contributions from the community. Please fork the repository and subm
 
 ## License
 
-This project is licensed under the MIT License. For more details, see the [LICENSE](../../../LICENSE) file.
+
+
+This project is licensed under the MIT License. For more details, see the [LICENSE](https://github.com/metetrkn/supermarket-kassa/blob/master/LICENSE) file.
